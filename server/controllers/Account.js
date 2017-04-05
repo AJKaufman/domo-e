@@ -11,6 +11,7 @@ const signupPage = (req, res) => {
 };
 
 const logout = (req, res) => {
+  req.session.destroy();
   res.redirect('/');
 };
 
@@ -31,12 +32,13 @@ const login = (request, response) => {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
 
+    req.session.account = Account.AccountModel.toAPI(account);
+
     return res.json({ redirect: '/maker' });
   });
 };
 
 const signup = (request, response) => {
-
   const req = request;
   const res = response;
 
@@ -51,8 +53,8 @@ const signup = (request, response) => {
   if (req.body.pass !== req.body.pass2) {
     return res.status(400).json({ error: 'Rar...the passwords don\'t match! :(' });
   }
-  
-  
+
+
   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const accountData = {
       username: req.body.username,
@@ -60,11 +62,17 @@ const signup = (request, response) => {
       password: hash,
     };
 
+    // creates a new model of this user's data
     const newAccount = new Account.AccountModel(accountData);
 
     const savePromise = newAccount.save();
 
-    savePromise.then(() => res.json({ redirect: '/maker' }));
+    // promises to save the user's data
+    savePromise.then(() => {
+      req.session.account = Account.AccountModel.toAPI(newAccount);
+      return res.json({ redirect: '/maker' });
+    });
+
 
     savePromise.catch((err) => {
       console.log(err);
@@ -76,7 +84,6 @@ const signup = (request, response) => {
       return res.status(400).json({ error: 'An error occurred' });
     });
   });
-  
 };
 
 module.exports.loginPage = loginPage;
