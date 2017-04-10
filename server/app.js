@@ -31,7 +31,7 @@ let redisPass;
 
 if (process.env.REDISCLOUD_URL) {
   redisURL = url.parse(process.env.REDISCLOUD_URL);
-  redisPASS = redisURL.auth.split(':')[1];
+  redisPass = redisURL.auth.split(':')[1];
 }
 
 // pull in our routes
@@ -41,19 +41,7 @@ const app = express();
 app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
 app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 app.disable('x-powered-by');
-app.use(cookieParser());
 
-app.use(csrf());
-app.use((err, req, res, next) => {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err);
-
-  console.log('Missing CSRF token');
-  return false;
-});
-app.use(compression());
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
 app.use(session({
   key: 'sessionid',
   store: new RedisStore({
@@ -68,9 +56,25 @@ app.use(session({
     httpOnly: true,
   },
 }));
+
 app.engine('handlebars', expressHandlebars({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.set('vews', `${__dirname}/../views`);
+
+app.use(cookieParser());
+
+app.use(csrf());
+app.use((err, req, res, next) => {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+
+  console.log('Missing CSRF token');
+  return false;
+});
+app.use(compression());
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
+
 
 router(app);
 
