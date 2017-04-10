@@ -22,14 +22,32 @@ var handleDomo = function handleDomo(e) {
   return false;
 };
 
-//const renderDomo = function() {
-//  return (
-//  
-//  
-//  
-//  
-//  )
-//}
+var renderDomo = function renderDomo() {
+  return React.createElement(
+    "form",
+    { id: "domoForm",
+      onSubmit: this.handleSubmit,
+      name: "domoForm",
+      action: "/maker",
+      method: "POST",
+      className: "domoForm"
+    },
+    React.createElement(
+      "label",
+      { htmlFor: "name" },
+      "Name: "
+    ),
+    React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
+    React.createElement(
+      "label",
+      { htmlFor: "age" },
+      "Age: "
+    ),
+    React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+    React.createElement("input", { type: "hidden", name: "_csrf", value: this.props.csrf }),
+    React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
+  );
+};
 "use strict";
 
 var handleError = function handleError(message) {
