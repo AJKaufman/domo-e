@@ -30,6 +30,7 @@ const handleSignup = (e) => {
     handleError("RAWR! Passwords do not match");
     return false;
   }
+  
   console.dir($("#signupForm").serialize());
   sendAjax("POST", $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
   
@@ -94,6 +95,8 @@ const createSignupWindow = function (csrf) {
     handleSubmit: handleSignup,
     render: renderSignup
   });
+  
+  console.log('creating signup window');
   
   ReactDOM.render(
     <SignupWindow csrf={csrf} />,

@@ -31,6 +31,7 @@ var handleSignup = function handleSignup(e) {
     handleError("RAWR! Passwords do not match");
     return false;
   }
+
   console.dir($("#signupForm").serialize());
   sendAjax("POST", $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
 
@@ -115,6 +116,8 @@ var createSignupWindow = function createSignupWindow(csrf) {
     render: renderSignup
   });
 
+  console.log('creating signup window');
+
   ReactDOM.render(React.createElement(SignupWindow, { csrf: csrf }), document.querySelector("#content"));
 };
 
@@ -159,16 +162,12 @@ var redirect = function redirect(response) {
 };
 
 var sendAjax = function sendAjax(type, action, data, success) {
-
-  console.dir(type);
   console.dir(action);
-  console.dir(data);
-  console.dir(success);
-
   $.ajax({
 
     cache: false,
     type: type,
+    url: action,
     data: data,
     dataType: 'json',
     success: success,

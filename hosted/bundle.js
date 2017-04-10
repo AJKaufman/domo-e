@@ -12,16 +12,12 @@ var redirect = function redirect(response) {
 };
 
 var sendAjax = function sendAjax(type, action, data, success) {
-
-  console.dir(type);
   console.dir(action);
-  console.dir(data);
-  console.dir(success);
-
   $.ajax({
 
     cache: false,
     type: type,
+    url: action,
     data: data,
     dataType: 'json',
     success: success,

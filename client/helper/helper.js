@@ -9,16 +9,12 @@ const redirect = (response) => {
 };
 
 const sendAjax = (type, action, data, success) => {
-  
-  console.dir(type);
   console.dir(action);
-  console.dir(data);
-  console.dir(success);
-  
   $.ajax({
      
     cache: false,
     type: type,
+    url: action,
     data: data,
     dataType: 'json',
     success: success,
@@ -26,7 +22,7 @@ const sendAjax = (type, action, data, success) => {
       
       var messageObj = JSON.parse(xhr.responseText);
       handleError(messageObj.error);
-    }    
+    }
   });  
 };
 
