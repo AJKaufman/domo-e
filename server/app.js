@@ -63,6 +63,12 @@ app.set('views', `${__dirname}/../views`);
 
 app.use(cookieParser());
 
+
+app.use(compression());
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
+
 app.use(csrf());
 app.use((err, req, res, next) => {
   if (err.code !== 'EBADCSRFTOKEN') return next(err);
@@ -70,11 +76,6 @@ app.use((err, req, res, next) => {
   console.log('Missing CSRF token');
   return false;
 });
-app.use(compression());
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
-
 
 router(app);
 
