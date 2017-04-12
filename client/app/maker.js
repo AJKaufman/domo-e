@@ -92,7 +92,7 @@ const setup = function(csrf) {
   );
   
   domoRenderer = ReactDOM.render(
-    <DomoListClass />, document.querySelector("#domos");
+    <DomoListClass />, document.querySelector("#domos")
   );
 };
 
