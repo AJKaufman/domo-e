@@ -40,6 +40,83 @@ const renderDomo = function() {
 };
 
 
+const renderDomoList = function() {
+  if(this.state.data.length === 0) {
+    return (
+      <div className="domoList">
+        <h3 className="emptyDomo">No Domos yet</h3>
+      </div>
+    );
+  }
+  
+  const domoNodes = this.state.data.map(function(domo) {
+    return (
+    <div key={domo._id} className="domo">
+      <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
+      <h3 className="domoName"> Name: {domo.name} </h3>
+      <h3 className="domoAge"> Age: {domo.age} </h3>
+    </div>
+    );    
+  });
+  
+  return (
+    <div className="domoList">
+      {domoNodes}
+    </div>
+  );
+};
+
+const setup = function(csrf) {
+  DomoFormClass = React.createClass({
+    handleSubmit: handleDomo,
+    render: renderDomo,
+  });
+    
+  DomoListClass = React.createClass({
+    loadDomosFromServer: function() {
+      sendAjax('GET', '/getDomos', null, function(data) {
+        this.setState({data:data.domos});
+      }.bind(this));
+    },
+    getInitialState: function() {
+      return {data: []};
+    },
+    componentDidMount: function() {
+      this.loadDomosFromServer();
+    },
+    render: renderDomoList
+  });
+  
+  domoForm = ReactDOM.render(
+    <DomoFormClass csrf={csrf} />, document.querySelector("#makeDomo")
+  );
+  
+  domoRenderer = ReactDOM.render(
+    <DomoListClass />, document.querySelector("#domos");
+  );
+};
+
+const getToken = () => {
+  sendAjax('GET', '/getToken', null, (result) => {
+    setup(result.csrfToken);
+  });
+};
+
+$(document).ready(function() {
+  getToken();
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
